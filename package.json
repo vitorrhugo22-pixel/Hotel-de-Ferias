@@ -1,0 +1,16 @@
+{
+  "name": "hoteldasferias-web-endless-pwa",
+  "version": "1.0.0",
+  "description": "Hotel das Férias – versão Web Endless PWA (singleplayer) para Railway",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
