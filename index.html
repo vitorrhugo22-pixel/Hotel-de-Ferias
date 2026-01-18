@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Hotel das Férias – Versão Web</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#39e29f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="icon" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="game" aria-label="Hotel das Férias"></canvas>
+
+  <div id="hud">
+    <div id="topbar">
+      <div id="title">Hotel das Férias</div>
+      <div id="clock">06:00</div>
+      <div id="day">Dia 1</div>
+      <button id="btn-install" class="secondary" style="display:none">Instalar</button>
+      <button id="btn-pause" aria-label="Pausar">⏸</button>
+      <button id="btn-audio" aria-label="Áudio">🔊</button>
+    </div>
+    <div id="meters">
+      <div class="m"><span>Energia</span><div class="bar"><div id="m-energy" class="fill"></div></div></div>
+      <div class="m"><span>Fome</span><div class="bar"><div id="m-hunger" class="fill"></div></div></div>
+      <div class="m"><span>Higiene</span><div class="bar"><div id="m-hygiene" class="fill"></div></div></div>
+      <div class="m"><span>Diversão</span><div class="bar"><div id="m-fun" class="fill"></div></div></div>
+    </div>
+    <div id="tasks">
+      <h3>Missões</h3>
+      <ul id="task-list"></ul>
+    </div>
+    <div id="hint" class="hidden"></div>
+  </div>
+
+  <div id="touch">
+    <div id="stick"><div id="stick-dot"></div></div>
+    <button id="btn-interact">Interagir (E)</button>
+    <button id="btn-run">Correr</button>
+  </div>
+
+  <div id="menu" class="overlay">
+    <div class="panel">
+      <h1>🏨 Hotel das Férias</h1>
+      <p>Um simulador relaxante e infinito para todas as idades.</p>
+      <button id="menu-start">Jogar</button>
+      <button id="menu-continue" class="secondary">Continuar</button>
+      <button id="menu-audio" class="secondary">Áudio: Ligado</button>
+      <button id="menu-install" class="secondary" style="display:none">Instalar</button>
+      <p class="mini">Computador: WASD/Setas para mover, E para Interagir, Shift para correr. <br>Celular/Tablet: use o joystick e os botões na tela.</p>
+    </div>
+  </div>
+
+  <div id="pause" class="overlay hidden">
+    <div class="panel">
+      <h2>Jogo pausado</h2>
+      <button id="pause-resume">Continuar</button>
+      <button id="pause-restart" class="secondary">Reiniciar Dia</button>
+      <button id="pause-exit" class="secondary">Voltar ao Menu</button>
+    </div>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('service-worker.js'));
+    }
+    let deferredPrompt=null;
+    window.addEventListener('beforeinstallprompt', (e)=>{
+      e.preventDefault();
+      deferredPrompt=e;
+      const btns=[document.getElementById('btn-install'), document.getElementById('menu-install')];
+      btns.forEach(b=>{ if(b) b.style.display='inline-block'; });
+      function ask(){ if(!deferredPrompt) return; deferredPrompt.prompt(); deferredPrompt.userChoice.finally(()=>{ deferredPrompt=null; btns.forEach(b=>b && (b.style.display='none')); }); }
+      btns.forEach(b=> b && b.addEventListener('click', ask));
+    });
+  </script>
+  <script src="main.js"></script>
+</body>
+</html>
